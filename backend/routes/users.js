@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const auth = require('../routes/auth');
 
-// Récupérer tous les utilisateurs
+
 router.get('/', async (req, res) => {
     try {
         const users = await User.find();
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Ajouter un utilisateur
+
 router.post('/', async (req, res) => {
     const { username, password, isAdmin } = req.body;
     try {
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Supprimer un utilisateur
+
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -40,17 +40,17 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/update-user-admin/:id', async (req, res) => {
     const { id } = req.params;
-    const { isAdmin } = req.body; // On récupère la nouvelle valeur de isAdmin
+    const { isAdmin } = req.body;
 
     try {
-        // Mettre à jour l'utilisateur avec le nouveau statut isAdmin
+        
         const updatedUser = await User.findByIdAndUpdate(id, { isAdmin }, { new: true });
 
         if (!updatedUser) {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
-        // Répondre avec l'utilisateur mis à jour
+        
         res.status(200).json(updatedUser);
     } catch (error) {
         console.error('Erreur lors de la mise à jour du statut isAdmin', error);
@@ -60,7 +60,7 @@ router.put('/update-user-admin/:id', async (req, res) => {
 
 router.get('/me', auth, async (req, res) => {
     try {
-        // req.user devrait être défini par le middleware d'authentification
+        
         const user = await User.findById(req.user.id).select('-password');
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });

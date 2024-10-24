@@ -1,3 +1,38 @@
+
+/**
+ * Composant `Login` pour gérer l'authentification des utilisateurs.
+ * 
+ * Props :
+ * - `onLogin` : Fonction passée en tant que prop qui sera appelée lorsque l'utilisateur se connecte avec succès. Elle est utilisée pour gérer l'état de l'utilisateur connecté dans l'application parent.
+ * 
+ * 1. États locaux (`useState`) :
+ *    - `username` : Contient le nom d'utilisateur saisi par l'utilisateur dans le formulaire.
+ *    - `password` : Contient le mot de passe saisi par l'utilisateur dans le formulaire.
+ * 
+ * 2. `useNavigate` :
+ *    - Permet de rediriger l'utilisateur après une connexion réussie vers la page d'accueil (`/`) ou la page d'administration (`/admin`) s'il est administrateur.
+ * 
+ * 3. Fonction `handleLogin` :
+ *    - Cette fonction est déclenchée lorsque l'utilisateur soumet le formulaire de connexion.
+ *    - Elle envoie une requête POST à l'API d'authentification (`/api/auth/login`) avec les informations de connexion (nom d'utilisateur et mot de passe).
+ *    - Si la réponse de l'API est positive (`response.ok`), elle appelle la fonction `onLogin` pour mettre à jour l'état utilisateur et redirige l'utilisateur en fonction de son statut (`/admin` pour les administrateurs, `/` pour les autres).
+ *    - En cas d'erreur ou de réponse incorrecte (mauvais identifiants), un message d'alerte est affiché avec les détails de l'erreur.
+ * 
+ * 4. Rendu du formulaire :
+ *    - Le formulaire de connexion inclut deux champs : un pour le nom d'utilisateur et un pour le mot de passe, avec des icônes pour chaque champ (icônes utilisateur et cadenas).
+ *    - Un bouton "Se connecter" permet de soumettre le formulaire.
+ *    - Un lien "Mot de passe oublié?" est inclus sous le bouton de connexion.
+ * 
+ * 5. Styles et mise en page :
+ *    - Le formulaire est centré verticalement et horizontalement avec une apparence moderne, grâce à Tailwind CSS.
+ *    - Les champs d'entrée sont stylisés avec des bordures et une mise en page adaptée à une expérience utilisateur agréable.
+ *    - Le bouton de connexion change de couleur au survol, créant une transition fluide.
+ * 
+ * 6. Gestion des erreurs :
+ *    - En cas d'erreur réseau ou si la connexion échoue, une alerte est affichée pour informer l'utilisateur de l'erreur.
+ */
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';

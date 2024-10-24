@@ -7,13 +7,13 @@ const Footer = () => {
         <footer className="bg-gray-800 text-white py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row justify-between">
-                    {/* Logo and Description */}
+                    
                     <div className="mb-4 md:mb-0">
                         <h3 className="text-lg font-bold">Iron4Software</h3>
                         <p className="mt-2">Votre partenaire pour des solutions logicielles innovantes.</p>
                     </div>
 
-                    {/* Useful Links */}
+                    
                     <div className="mb-4">
                         <h4 className="text-md font-semibold">Liens utiles</h4>
                         <ul className="mt-2 space-y-1">
@@ -25,7 +25,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Social Media Links */}
+                    
                     <div className="mb-4">
                         <h4 className="text-md font-semibold">Suivez-nous</h4>
                         <div className="flex space-x-4 mt-2">

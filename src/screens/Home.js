@@ -1,3 +1,41 @@
+
+/**
+ * Composant `Home` qui représente la page d'accueil de l'application.
+ * 
+ * 1. États locaux (`useState`) :
+ *    - `featuredProducts` : Liste des produits vedettes qui sont affichés sur la page d'accueil. 
+ *      Initialement vide, cette liste est remplie après avoir récupéré les données depuis l'API.
+ * 
+ * 2. Effet (`useEffect`) :
+ *    - `fetchFeaturedProducts` : Fonction asynchrone qui effectue une requête `fetch` vers l'API pour récupérer les produits.
+ *      Une fois les données récupérées, elle sélectionne les quatre premiers produits et les stocke dans `featuredProducts`.
+ *      Un gestionnaire d'erreurs est inclus pour capturer et afficher toute erreur éventuelle dans la console.
+ * 
+ * 3. Structure du rendu :
+ *    - Un titre d'accueil et une brève introduction de l'entreprise sont affichés en haut de la page.
+ *    - Un bouton permet de naviguer vers la page des produits pour consulter la liste complète.
+ *    - La section "Nos produits vedettes" affiche une grille des quatre premiers produits récupérés depuis l'API, 
+ *      chaque produit ayant un titre, une description tronquée, un prix et une image. Un effet de zoom (scale) est appliqué au survol des produits.
+ * 
+ * 4. Section "Pourquoi choisir Iron4Software" :
+ *    - Cette section présente trois avantages de l'entreprise sous forme de cartes avec des icônes : 
+ *      Expertise technique, Solutions sur mesure, et Support continu.
+ *    - Chaque carte est interactive avec un effet de zoom (scale) au survol.
+ * 
+ * 5. Appel à l'action :
+ *    - La dernière section de la page invite les visiteurs à entrer en contact pour discuter des solutions logicielles proposées.
+ *    - Un bouton redirige vers la page de contact pour faciliter la prise de contact avec l'entreprise.
+ * 
+ * 6. Responsivité :
+ *    - La grille des produits vedettes est responsive, passant d'une colonne sur les petits écrans à quatre colonnes sur les grands écrans.
+ *    - La section "Pourquoi choisir Iron4Software" est également adaptée pour une disposition en une ou trois colonnes en fonction de la taille de l'écran.
+ * 
+ * 7. Transitions et styles :
+ *    - Des transitions CSS sont appliquées sur divers éléments pour des interactions fluides et agréables (par exemple, les boutons et les produits vedettes).
+ *    - Les styles et classes Tailwind CSS sont utilisés pour la mise en page, les espacements, et les couleurs.
+ */
+
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
