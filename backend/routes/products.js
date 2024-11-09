@@ -1,120 +1,79 @@
-
-/**
- * Ce fichier gère les routes liées aux produits, permettant d'ajouter, récupérer, mettre à jour et supprimer des produits dans la base de données.
- * 
- * 1. Route POST `/` :
- *    - Cette route permet d'ajouter un nouveau produit.
- *    - Elle récupère le dernier produit ajouté en utilisant `Product.findOne().sort({ productId: -1 })` pour déterminer le dernier `productId`.
- *    - Si un produit existe, le nouvel identifiant de produit sera `lastProduct.productId + 1`, sinon il sera défini à 1.
- *    - Un nouveau produit est ensuite créé avec les informations fournies (`name`, `description`, `price`, `imageUrl`) et sauvegardé dans la base de données.
- *    - En cas de succès, la réponse renvoie un message et le produit ajouté. En cas d'échec, une erreur 400 est renvoyée.
- * 
- * 2. Route GET `/` :
- *    - Cette route permet de récupérer tous les produits de la base de données.
- *    - Si la récupération est réussie, elle renvoie un tableau contenant tous les produits avec un code de statut 200.
- *    - En cas d'erreur (problème serveur), une réponse avec un code de statut 500 et les détails de l'erreur est envoyée.
- * 
- * 3. Route GET `/:id` :
- *    - Cette route permet de récupérer un produit spécifique en fonction de son `productId` passé dans l'URL.
- *    - Si le produit n'existe pas, une réponse 404 est renvoyée avec un message "Produit non trouvé".
- *    - En cas de succès, le produit est renvoyé, ou en cas d'erreur serveur, une erreur 500 avec les détails est envoyée.
- * 
- * 4. Route DELETE `/:id` :
- *    - Cette route permet de supprimer un produit en fonction de son `productId`.
- *    - Si le produit est supprimé avec succès, une réponse 200 est envoyée avec un message de succès.
- *    - Si le produit n'est pas trouvé, une réponse 404 est renvoyée.
- *    - En cas d'erreur durant la suppression, une réponse 400 est envoyée avec les détails de l'erreur.
- * 
- * 5. Route PUT `/:id` :
- *    - Cette route permet de mettre à jour un produit en fonction de son `productId`.
- *    - Elle accepte les informations mises à jour pour le nom, la description, le prix et l'URL de l'image du produit.
- *    - Si le produit est trouvé et mis à jour, il est renvoyé avec un statut 200.
- *    - Si le produit n'est pas trouvé, une réponse 404 est renvoyée.
- *    - En cas d'erreur serveur lors de la mise à jour, une erreur 500 est renvoyée avec les détails de l'erreur.
- */
-
-
 const express = require('express');
-const Product = require('../models/Product');
-
 const router = express.Router();
 
+module.exports = (db) => {
+    // POST - Ajouter un nouveau produit
+    router.post('/', (req, res) => {
+        const { name, description, price, image } = req.body;
 
-router.post('/', async (req, res) => {
-    const { name, description, price, imageUrl } = req.body;
-
-    try {
-        
-        const lastProduct = await Product.findOne().sort({ productId: -1 });
-
-        const newProductId = lastProduct ? lastProduct.productId + 1 : 1;
-
-        const newProduct = new Product({
-            productId: newProductId,
-            name,
-            description,
-            price,
-            imageUrl
+        // Insérer le nouveau produit dans la base de données
+        const query = `INSERT INTO products (name, description, price, image) VALUES (?, ?, ?, ?)`;
+        db.run(query, [name, description, price, image], function(err) {
+            if (err) {
+                console.error('Erreur lors de l\'ajout du produit:', err);
+                return res.status(500).json({ error: 'Erreur lors de l\'ajout du produit', details: err.message });
+            }
+            res.status(201).json({ message: 'Produit ajouté avec succès', product: { id: this.lastID, name, description, price, image } });
         });
+    });
 
-        await newProduct.save();
-        res.status(201).json({ message: 'Produit ajouté avec succès', product: newProduct });
-    } catch (error) {
-        res.status(400).json({ error: 'Erreur lors de l\'ajout du produit', details: error });
-    }
-});
+    // GET - Récupérer tous les produits
+    router.get('/', (req, res) => {
+        db.all("SELECT * FROM products", [], (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: 'Erreur lors de la récupération des produits', details: err.message });
+            }
+            res.status(200).json(rows);
+        });
+    });
 
-router.get('/', async (req, res) => {
-    try {
-        const products = await Product.find();
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la récupération des produits', details: error });
-    }
-});
+    // GET - Récupérer un produit par ID
+    router.get('/:id', (req, res) => {
+        const id = req.params.id;
+        db.get("SELECT * FROM products WHERE id = ?", [id], (err, row) => {
+            if (err) {
+                return res.status(500).json({ error: 'Erreur lors de la récupération du produit', details: err.message });
+            }
+            if (!row) {
+                return res.status(404).json({ message: 'Produit non trouvé' });
+            }
+            res.json(row);
+        });
+    });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const product = await Product.findOne({ productId: req.params.id }); 
-        if (!product) {
-            return res.status(404).json({ message: 'Produit non trouvé' });
-        }
-        res.json(product);
-    } catch (error) {
-        res.status(500).json({ message: 'Erreur serveur', details: error });
-    }
-});
+    // DELETE - Supprimer un produit par ID
+    router.delete('/:id', (req, res) => {
+        const id = req.params.id;
+        db.run("DELETE FROM products WHERE id = ?", [id], function(err) {
+            if (err) {
+                return res.status(400).json({ error: 'Erreur lors de la suppression du produit', details: err.message });
+            }
+            if (this.changes === 0) {
+                return res.status(404).json({ message: 'Produit non trouvé' });
+            }
+            res.status(200).json({ message: 'Produit supprimé avec succès' });
+        });
+    });
 
-router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
+    // PUT - Mettre à jour un produit par ID
+    router.put('/:id', (req, res) => {
+        const id = req.params.id;
+        const { name, description, price, image } = req.body;
 
-    try {
-        const deletedProduct = await Product.findOneAndDelete({ productId: id });
-        if (!deletedProduct) {
-            return res.status(404).json({ message: 'Produit non trouvé' });
-        }
-        res.status(200).json({ message: 'Produit supprimé avec succès' });
-    } catch (error) {
-        res.status(400).json({ error: 'Erreur lors de la suppression du produit', details: error });
-    }
-});
-
-router.put('/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name, description, price, imageUrl } = req.body;
-
-    try {
-        const updatedProduct = await Product.findOneAndUpdate({ productId: id }, 
-            { name, description, price, imageUrl }, 
-            { new: true }
+        db.run(
+            "UPDATE products SET name = ?, description = ?, price = ?, image = ? WHERE id = ?",
+            [name, description, price, image, id],
+            function(err) {
+                if (err) {
+                    return res.status(500).json({ error: 'Erreur lors de la mise à jour du produit', details: err.message });
+                }
+                if (this.changes === 0) {
+                    return res.status(404).json({ message: 'Produit non trouvé' });
+                }
+                res.status(200).json({ message: 'Produit mis à jour avec succès', product: { id, name, description, price, image } });
+            }
         );
-        if (!updatedProduct) {
-            return res.status(404).json({ message: 'Produit non trouvé' });
-        }
-        res.status(200).json(updatedProduct);
-    } catch (error) {
-        res.status(500).json({ error: 'Erreur lors de la mise à jour du produit', details: error });
-    }
-});
+    });
 
-module.exports = router;
+    return router;
+};

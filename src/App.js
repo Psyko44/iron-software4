@@ -61,6 +61,7 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import axios from 'axios';
 import Footer from './screens/Footer';
 import VulnerableContactForm from './screens/FormContact-unsecure';
+import RegisterUnsecure from './screens/Register-unsecure';
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -103,7 +104,7 @@ const App = () => {
                 <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                     <Routes>
                         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-                        <Route path="/register" element={<Register />} />
+                        <Route path="/register" element={<RegisterUnsecure />} />
                         <Route path ="/contact" element={<VulnerableContactForm />} /> 
                         <Route 
                             path="/products" 

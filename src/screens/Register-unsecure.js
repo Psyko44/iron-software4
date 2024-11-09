@@ -44,7 +44,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const RegisterUnsecure = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -140,4 +140,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default RegisterUnsecure;
