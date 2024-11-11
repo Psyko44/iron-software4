@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const connectDB = require('./db');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
-const userRoutes = require('./routes/users'); 
+const userRoutes = require('./routes/users');
+const uploadRoutes = require('./routes/uploads'); // Importation de la route d'upload
 
 dotenv.config();
 
@@ -19,9 +20,12 @@ const db = connectDB();
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', authRoutes(db));  // Passez db aux routes
-app.use('/api/products', productRoutes(db)); 
-app.use('/api/users', userRoutes(db)); 
+app.use('/api/auth', authRoutes(db));
+app.use('/api/products', productRoutes(db));
+app.use('/api/users', userRoutes(db));
+app.use('/api/upload', uploadRoutes); // Route pour l'upload
+app.use('/uploads', express.static('uploads'));
+
 
 // Lancer le serveur
 app.listen(PORT, () => {

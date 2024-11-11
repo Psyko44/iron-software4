@@ -4,6 +4,7 @@ const VulnerableContactForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [file, setFile] = useState(null); // Nouveau état pour le fichier
   const [submittedName, setSubmittedName] = useState('');
 
   const handleSubmit = (e) => {
@@ -11,6 +12,24 @@ const VulnerableContactForm = () => {
     
     // Affiche le contenu du champ `name` dans un élément avec `dangerouslySetInnerHTML`
     setSubmittedName(name); // Met à jour `submittedName` pour afficher le contenu sans échappement
+
+    if (file) {
+      // Envoyer le fichier vulnérable
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('http://localhost:5000/api/upload', { // URL du backend vulnérable
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log("Fichier uploadé : ", data);
+      })
+      .catch(error => {
+        console.error("Erreur lors de l'upload du fichier : ", error);
+      });
+    }
   };
 
   return (
@@ -56,6 +75,17 @@ const VulnerableContactForm = () => {
             value={message} 
             onChange={(e) => setMessage(e.target.value)} 
             required 
+          />
+        </div>
+
+        {/* Nouveau champ pour le téléchargement de fichier */}
+        <div className="mb-6">
+          <label className="block text-gray-700 font-semibold mb-2" htmlFor="file">Télécharger un fichier :</label>
+          <input 
+            type="file" 
+            id="file" 
+            className="w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600" 
+            onChange={(e) => setFile(e.target.files[0])} 
           />
         </div>
 
