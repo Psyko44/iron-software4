@@ -28,6 +28,6 @@ app.use('/uploads', express.static('uploads'));
 
 
 // Lancer le serveur
-app.listen(PORT, () => {
-    console.log(`Serveur en écoute sur http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Serveur en écoute sur http://0.0.0.0:${PORT}`);
 });
