@@ -12,7 +12,7 @@ const ProductDetail = () => {
         const fetchProduct = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/${id}`);
                 setProduct(response.data);
             } catch (err) {
                 setError('Une erreur est survenue lors du chargement du produit.');

@@ -18,7 +18,7 @@ const VulnerableContactForm = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      fetch('http://iron4software:5000/api/upload', { // URL du backend vulnérable
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/api/upload`, { // URL du backend vulnérable
         method: 'POST',
         body: formData,
       })

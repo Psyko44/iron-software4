@@ -26,7 +26,7 @@ const Admin = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/products");
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products`);
       setProducts(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des produits", error);
@@ -35,7 +35,7 @@ const Admin = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/users");
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/users`);
       setUsers(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des utilisateurs", error);
@@ -45,7 +45,7 @@ const Admin = () => {
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/products", newProduct);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/products`, newProduct);
       fetchProducts();
       setNewProduct({
         name: "",
@@ -62,7 +62,7 @@ const Admin = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:5000/api/products/${selectedProduct.id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/products/${selectedProduct.id}`,
         selectedProduct
       );
       fetchProducts();
@@ -77,7 +77,7 @@ const Admin = () => {
     if (!selectedProduct) return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/products/${selectedProduct.id}`
+        `${process.env.REACT_APP_API_BASE_URL}/api/products/${selectedProduct.id}`
       );
       fetchProducts();
       setSelectedProduct(null);
@@ -95,7 +95,7 @@ const Admin = () => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/users", newUser);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/users`, newUser);
       fetchUsers();
       setNewUser({ username: "", password: "", isAdmin: false });
     } catch (error) {
@@ -105,7 +105,7 @@ const Admin = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/users/${id}`);
       fetchUsers();
     } catch (error) {
       console.error("Erreur lors de la suppression de l'utilisateur", error);
@@ -115,7 +115,7 @@ const Admin = () => {
   const handleToggleAdmin = async (id, currentStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/users/update-user-admin/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/users/update-user-admin/${id}`,
         {
           isAdmin: !currentStatus,
         }

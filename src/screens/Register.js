@@ -29,7 +29,7 @@
  * - Le formulaire vérifie localement si le mot de passe et la confirmation du mot de passe correspondent avant d'envoyer la requête à l'API.
  * 
  * API :
- * - Les informations de l'utilisateur (nom d'utilisateur, mot de passe) sont envoyées sous forme de requête POST à l'API locale à l'URL `http://localhost:5000/api/auth/register`.
+ * - Les informations de l'utilisateur (nom d'utilisateur, mot de passe) sont envoyées sous forme de requête POST à l'API locale à l'URL `${process.env.REACT_APP_API_BASE_URL}/api/auth/register`.
  * 
  * Ce composant permet aux utilisateurs de s'inscrire à l'application en créant un nouveau compte.
  */
@@ -50,7 +50,7 @@ const Register = () => {
             alert("Les mots de passe ne correspondent pas.");
             return;
         }
-        const response = await fetch('http://localhost:5000/api/auth/register', {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

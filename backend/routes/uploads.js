@@ -7,10 +7,9 @@ const router = express.Router();
 // Configurez le stockage avec multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Dossier où les fichiers seront enregistrés
+        cb(null, '/var/www/iron/build/uploads'); // Dossier complet où les fichiers seront enregistrés
     },
     filename: (req, file, cb) => {
-        // Utilisez le nom original du fichier
         cb(null, file.originalname); 
     },
 });

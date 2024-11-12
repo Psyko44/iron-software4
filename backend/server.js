@@ -10,7 +10,12 @@ const uploadRoutes = require('./routes/uploads'); // Importation de la route d'u
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://iron4software', // Autorise uniquement iron4software
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Autorise ces méthodes HTTP
+    allowedHeaders: ['Content-Type', 'Authorization'], // Autorise ces en-têtes
+}));
+
 const PORT = process.env.PORT || 5000;
 
 // Connexion à SQLite

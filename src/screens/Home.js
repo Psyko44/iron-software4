@@ -7,7 +7,7 @@ const Home = () => {
     useEffect(() => {
         const fetchFeaturedProducts = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/products');
+                const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/products`);
                 const data = await response.json();
                 setFeaturedProducts(data.slice(0, 4));
             } catch (error) {
