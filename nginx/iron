@@ -1,0 +1,48 @@
+server {
+	listen 80;
+	server_name iron4software;
+	
+	# Emplacement du frontend React (Build)
+	location / {
+		root /var/www/iron/build;
+		try_files $uri $uri/ /index.html;
+	}
+	
+	# Proxy pour l'API backend (Express)
+	location /api/ {
+		proxy_pass http://localhost:5000;
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_set_header Host $host;
+		proxy_cache_bypass $http_upgrade;
+		
+		# Configuration CORS
+		if ($request_method = 'OPTIONS') {
+			add_header 'Access-Control-Allow-Origin' 'http://iron4software';
+			add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+			add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+			add_header 'Access-Control-Max-Age' 1728000;
+			add_header 'Content-Type' 'text/plain; charset=utf-8';
+			add_header 'Content-Length' 0;
+			return 204;
+		}
+		
+		add_header 'Access-Control-Allow-Origin' 'http://iron4software';
+		add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+		add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+	}
+	
+	# Interprétation des fichiers PHP dans /build/uploads/
+	location /uploads/ {
+		root /var/www/iron/build;
+		autoindex on;
+		
+		location ~ \.php$ {
+			include fastcgi_params;
+			fastcgi_split_path_info ^(.+\.php)(/.+)$;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;  # Assurez-vous que le chemin du socket est correct
+		}
+	}
+}
